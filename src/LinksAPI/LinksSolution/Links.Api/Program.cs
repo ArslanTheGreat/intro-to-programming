@@ -19,7 +19,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseAuthorization();
 
-app.MapControllers();
+app.MapControllers(); // Create a phone book of possible things this API can expect 
+// For example when someone does a POST 
+// Route Table
 
 app.Run(); // This is where our API will be up and running, listening for requests
 // This is basically a while(true) {...} loop that will run "forever"
