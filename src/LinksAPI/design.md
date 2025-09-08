@@ -7,7 +7,7 @@
 - Define our "representation" - how we are going to pass data from the client to the server, and how the server is going to send us data.
 
 ```http
-POST http://lcoalhost:1337/links
+POST http://localhost:1337/links
 Content-Type: application/json
 Authorization: bearer SOME_VALUE_YOU_GET_FROM_ANOTHER_SERVICE
 
@@ -16,4 +16,3 @@ Authorization: bearer SOME_VALUE_YOU_GET_FROM_ANOTHER_SERVICE
     "description": "Best danged training available ANYWHERE!"
 }
 ```
-
