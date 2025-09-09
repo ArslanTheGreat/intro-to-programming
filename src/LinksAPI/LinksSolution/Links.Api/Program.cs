@@ -1,3 +1,4 @@
+// This is compiling to an INTERNAL calss called the Program without a Namespace
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -28,3 +29,6 @@ app.Run(); // This is where our API will be up and running, listening for reques
 
 
 // Shortcut: ctrl f5 - runs
+
+// I want to make this "Progam" class visible to my tests
+public partial class Program;

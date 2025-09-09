@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Json;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using Alba;
 
 namespace Links.Tests;
 public class AddingLinks
@@ -13,11 +9,27 @@ public class AddingLinks
     {
 
         // this is low rent better way tmrw
-        var client = new HttpClient();
-        client.BaseAddress = new Uri("http://localhost:1337");
+        //var client = new HttpClient();
+        //client.BaseAddress = new Uri("http://localhost:1337");
 
-        var response = await client.PostAsJsonAsync("/links", new { });
+        //var response = await client.PostAsJsonAsync("/links", new { });
 
-        Assert.Equal(System.Net.HttpStatusCode.OK, response.StatusCode);
+        //Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        // this will start up (host) my API for me in this test
+        var host = await AlbaHost.For<Program>();
+
+        // given I post this data to this API then this should happen
+        await host.Scenario(api =>
+        {
+            api.Post.Json(new { }).ToUrl("/links");
+            api.StatusCodeShouldBeOk();
+
+
+        });
+
+
+
+
     }
 }

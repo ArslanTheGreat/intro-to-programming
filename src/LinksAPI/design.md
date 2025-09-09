@@ -16,3 +16,17 @@ Authorization: bearer SOME_VALUE_YOU_GET_FROM_ANOTHER_SERVICE
     "description": "Best danged training available ANYWHERE!"
 }
 ```
+
+```http
+200 Ok
+Content-Type: application/json
+
+{
+    "id": 859234590945634689,
+    "href": "https://www.hypertheory.com",
+    "description": "Best danged training available ANYWHERE!",
+    "addedBy": "me",
+    "date": "today"
+}
+
+```
