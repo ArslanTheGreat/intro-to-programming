@@ -1,7 +1,17 @@
 // This is compiling to an INTERNAL calss called the Program without a Namespace
+using JasperFx.CodeGeneration.Frames;
+using Marten;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+var connectionString = builder.Configuration.GetConnectionString("links")
+    ?? throw new Exception("Need connection string");
+builder.Services.AddMarten(config =>
+{
+    config.Connection(connectionString);
+
+});
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

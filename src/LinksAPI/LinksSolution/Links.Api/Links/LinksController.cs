@@ -1,17 +1,29 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Marten;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Links.Api.Links;
 
 
 // Whenever a POST comes in for "/links" create an instance of this class
-public class LinksController : ControllerBase
+public class LinksController(IDocumentSession session) : ControllerBase
 {
     // Shortcut for errors - Click on error hit ctrl+.(period)
 
     // "Flag a marker on this method that the Api will read and know this is where POSTs to "/links" should be directed
+
+
+    //private IDocumentSession session;
+
+    //public LinksController(IDocumentSession session)
+    //{
+    //    this.session = session;
+    //}
+
     [HttpPost("/links")]
     public async Task<ActionResult> AddALink(
-        [FromBody] CreateLinkRequest request)
+        [FromBody] CreateLinkRequest request
+        
+        )
     {
 
         var response = new CreateLinkResponse
@@ -22,8 +34,25 @@ public class LinksController : ControllerBase
             AddedBy = "Arra@aol.com",
             Created = DateTimeOffset.Now,
         };
+        session.Store(response);
+        await session.SaveChangesAsync();
+        //return Ok(response); // = return new OkObjectResult("good"); but with ControllerBase makes it simple as you can see
+        return Created($"/links/{response.Id}", response);
+    }
 
-        return Ok(response); // = return new OkObjectResult("good"); but with ControllerBase makes it simple as you can see
+    [HttpGet("/links/{postId:guid}")]
+    public async Task<ActionResult> GetLinkById(Guid postId)
+    {
+        var savedLink = await session.Query<CreateLinkResponse>().
+      SingleOrDefaultAsync(x => x.Id == postId);
+        if (savedLink is null)
+        {
+            return NotFound();
+        }
+        else
+        {
+            return Ok(savedLink);
+        }
     }
 }
 
