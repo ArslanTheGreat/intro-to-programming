@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Banking.Domain;
+﻿
 
 namespace Banking.Tests.MakingWithdrawals;
 
@@ -39,18 +34,5 @@ public class WithdrawalsDecreasesBalance
 
         Assert.Equal(0M, account.GetBalance());
     }
-
-    [Theory]
-    [InlineData(-1)]
-    [InlineData(0)]
-    public void InvalidAmountsCannotBeWithdrawan(decimal amountToWithdraw)
-    {
-        var account = new BankAccount();
-        var openingBalance = account.GetBalance();
-
-        Assert.Throws<InvalidTransactionAmountException>(() => account.Withdraw(amountToWithdraw));
-
-        Assert.Equal(openingBalance, account.GetBalance());
-    }
-
+   
 }

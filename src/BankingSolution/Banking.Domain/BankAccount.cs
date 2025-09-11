@@ -16,22 +16,14 @@ public class BankAccount
         return balance; // hardcoded slime
     }
 
-    public void Deposit(decimal amountToDeposit)
+    public void Deposit(TransactionAmount amountToDeposit)
     {
-        if (amountToDeposit <= 0)
-        {
-            throw new InvalidTransactionAmountException();
-        }
         balance += amountToDeposit;
-
     }
 
-    public void Withdraw(decimal amountToWithdraw)
+    public void Withdraw(TransactionAmount amountToWithdraw)
     {
-        if (amountToWithdraw <= 0) // These are sometimes called "Guard" clauses.
-        {
-            throw new InvalidTransactionAmountException();
-        }
+        
         if (amountToWithdraw <= balance)
         {
             balance -= amountToWithdraw;
