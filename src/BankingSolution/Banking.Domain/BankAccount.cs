@@ -13,10 +13,10 @@ public class BankAccount
     public decimal GetBalance()
     {
         
-        return balance; // hardcoded slime
+        return balance; // hardcoded slime 
     }
 
-    public void Deposit(TransactionAmount amountToDeposit)
+    public virtual void Deposit(TransactionAmount amountToDeposit) // virtual to allow override in derived classes - GoldAccount
     {
         balance += amountToDeposit;
     }
