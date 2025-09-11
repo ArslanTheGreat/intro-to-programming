@@ -18,12 +18,27 @@ public class BankAccount
 
     public void Deposit(decimal amountToDeposit)
     {
+        if (amountToDeposit <= 0)
+        {
+            throw new InvalidTransactionAmountException();
+        }
         balance += amountToDeposit;
 
     }
 
     public void Withdraw(decimal amountToWithdraw)
     {
-        balance -= amountToWithdraw;
+        if (amountToWithdraw <= 0) // These are sometimes called "Guard" clauses.
+        {
+            throw new InvalidTransactionAmountException();
+        }
+        if (amountToWithdraw <= balance)
+        {
+            balance -= amountToWithdraw;
+        }
+        else
+        {
+            throw new AccountOverdraftException();
+        }
     }
 }
