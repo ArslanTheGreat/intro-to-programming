@@ -1,7 +1,14 @@
-import { Component, ChangeDetectionStrategy, signal } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  signal,
+  computed,
+  inject,
+} from '@angular/core';
 import { NavLink } from './types';
 import { NavBarLink } from './nav-link';
 import { RouterLink } from '@angular/router';
+import { BankAccountStore } from '../../demos/services/bank-account-store';
 
 @Component({
   selector: 'app-navigation',
@@ -32,7 +39,10 @@ import { RouterLink } from '@angular/router';
             class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
           >
             @for (link of links(); track link.href) {
-              <app-nav-link [link]="link" />
+              <app-nav-link
+                (linkClicked)="onLinkClicked($event)"
+                [link]="link"
+              />
             }
           </ul>
         </div>
@@ -42,21 +52,33 @@ import { RouterLink } from '@angular/router';
       <div class="navbar-center hidden lg:flex">
         <ul class="menu menu-horizontal px-1">
           @for (link of links(); track link.href) {
-            <app-nav-link [link]="link" />
+            <app-nav-link
+              [decoration]="getDecoration()"
+              (linkClicked)="onLinkClicked($event)"
+              [link]="link"
+            />
           }
         </ul>
       </div>
       <div class="navbar-end">
-        <a class="btn">Button</a>
+        <span>Balance: {{ BankAc.balance() }}</span>
+        <a class="btn" onclick="boom()">Button</a>
       </div>
     </div>
   `,
   styles: ``,
 })
 export class Navigation {
-  demo = signal({
-    pizza: 'yummy',
-  });
+
+  BankAc = inject(BankAccountStore);
+
+
+  current = signal('');
+
+  getDecoration = computed(() => (this.current() === 'Home' ? '*' : ''));
+  onLinkClicked(path: string) {
+    this.current.set(path);
+  }
   links = signal<NavLink[]>([
     {
       href: '/',

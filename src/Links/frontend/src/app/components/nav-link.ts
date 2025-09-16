@@ -1,4 +1,9 @@
-import { Component, ChangeDetectionStrategy, input } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  input,
+  output,
+} from '@angular/core';
 import { NavLink } from './types';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
@@ -12,11 +17,14 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
       [routerLinkActive]="['font-bold', 'text-accent']"
       [routerLinkActiveOptions]="{ exact: true }"
       [routerLink]="link().href"
-      >{{ link().label }}</a
+      (click)="linkClicked.emit(link().label)"
+      >{{ link().label }}{{ decoration() }}</a
     >
   `,
   styles: ``,
 })
 export class NavBarLink {
   link = input.required<NavLink>();
+  decoration = input<string>('');
+  linkClicked = output<string>();
 }
