@@ -1,40 +1,32 @@
 import { CurrencyPipe } from '@angular/common';
-import { Component, ChangeDetectionStrategy, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { BankAccountStore } from '../services/bank-account-store';
+import { BankWithdrawAmountSelector } from '../components/bank-withdraw-amount-selector';
+import { BankWithdrawTransactionActions } from '../components/bank-withdraw-transaction-actions';
 
 @Component({
   selector: 'app-demos-atm-withdraw',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CurrencyPipe],
+  imports: [
+    CurrencyPipe,
+    BankWithdrawAmountSelector,
+    BankWithdrawTransactionActions,
+  ],
+  providers: [],
   template: `
     <p class="text-2xl font-bold">
-      Your Current Balance is {{ balance() | currency }}
+      Your Current Balance is {{ store.balance() | currency }}
     </p>
 
-    <div class="flex gap-4">
-      @for (amount of amounts; track $index) {
-        <button (click)="addAmount(amount)" class="btn btn-success">
-          {{ amount }}
-        </button>
-      }
-    </div>
+    <app-demo-bank-withdraw-amount-selector />
 
     <div>
-      <p>You want to withdraw: {{ plannedWithdrawal() | currency }}</p>
+      <p>You want to withdraw: {{ store.plannedWithdrawal() | currency }}</p>
     </div>
+    <app-demo-bank-withdraw-transaction-actions />
   `,
   styles: ``,
 })
 export class AtmWithdraw {
-  // this will be fake, but play along.
-
-  readonly amounts = [10, 20, 50, 100] as const;
-  balance = signal(500);
-
-  plannedWithdrawal = signal(0);
-
-  addAmount(amount: number) {
-    this.plannedWithdrawal.update((oldAmount) => oldAmount + amount);
-    // or
-    //this.plannedWithdrawal.set(this.plannedWithdrawal() + amount);
-  }
+  store = inject(BankAccountStore); // the same as the constructor on our BankAccount(ICanCalculateBonuses )
 }
