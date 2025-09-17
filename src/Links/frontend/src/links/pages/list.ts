@@ -2,10 +2,10 @@ import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, resource } from '@angular/core';
 
 @Component({
-    selector: 'app-links-list',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [DatePipe],
-    template: `
+  selector: 'app-links-list',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [DatePipe],
+  template: `
     @if (linksResource.isLoading()) {
       <div class="alert alert-info">Chill out - loading your links.</div>
     } @else {
@@ -36,12 +36,12 @@ import { ChangeDetectionStrategy, Component, resource } from '@angular/core';
       </ul>
     }
   `,
-    styles: ``,
+  styles: ``,
 })
 export class List {
-    // TODO: one super fake classroom thing incoming, but I will fix this later, I promise.
+  // TODO: one super fake classroom thing incoming, but I will fix this later, I promise.
 
-    linksResource = resource({
-        loader: () => fetch('http://localhost:1337/links').then((r) => r.json()),
-    });
+  linksResource = resource({
+    loader: () => fetch('http://localhost:1337/links').then((r) => r.json()),
+  });
 }

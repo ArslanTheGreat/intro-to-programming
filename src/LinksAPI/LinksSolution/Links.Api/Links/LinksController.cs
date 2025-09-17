@@ -66,6 +66,7 @@ public record CreateLinkRequest
 {
     public string Href { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
+    public string Title { get; set; } = string.Empty;
 }
 
 
