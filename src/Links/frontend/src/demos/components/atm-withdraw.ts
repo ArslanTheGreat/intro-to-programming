@@ -1,6 +1,6 @@
 import { CurrencyPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { BankAccountStore } from '../services/bank-account-store';
+import { BankAccountStore } from '../../shared/services/bank-account-store';
 import { BankWithdrawAmountSelector } from '../components/bank-withdraw-amount-selector';
 import { BankWithdrawTransactionActions } from '../components/bank-withdraw-transaction-actions';
 
@@ -12,13 +12,12 @@ import { BankWithdrawTransactionActions } from '../components/bank-withdraw-tran
     BankWithdrawAmountSelector,
     BankWithdrawTransactionActions,
   ],
-  providers: [BankAccountStore],
+  providers: [],
   template: `
-    <div>
-      <p class="text-2xl font-bold">
-        Your Current Balance is {{ store.balance() | currency }}
-      </p>
-    </div>
+    <p class="text-2xl font-bold">
+      Your Current Balance is {{ store.balance() | currency }}
+    </p>
+
     <app-demo-bank-withdraw-amount-selector />
 
     <div>

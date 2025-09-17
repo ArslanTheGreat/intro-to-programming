@@ -1,10 +1,4 @@
-import { http, HttpResponse } from 'msw';
+import { LinksApiTestDoubles } from './links-handler';
 
-export const WELCOME_HANDLERS = [
-  http.get('/api/hello', () => {
-    return HttpResponse.json({
-      message: 'Welcome to Angular Starter',
-      delivered: new Date().toISOString(),
-    });
-  }),
-];
+export const handlers = [...LinksApiTestDoubles];
+
