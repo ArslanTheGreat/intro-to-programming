@@ -61,24 +61,30 @@ import { BankAccountStore } from '../../shared/services/bank-account-store';
         </ul>
       </div>
       <div class="navbar-end">
-        <span>Balance: {{ BankAc.balance() }}</span>
-        <a class="btn" onclick="boom()">Button</a>
+        <span class="text-xs text-gray-500"
+          >Your balance is {{ accountStore.balance() }} and you want to do a
+          withdrawal of {{ accountStore.plannedWithdrawal() }}</span
+        >
+        <span>(You are at {{ current() }})</span>
+        <button (click)="doSomething()" class="btn">Button</button>
       </div>
     </div>
   `,
   styles: ``,
 })
 export class Navigation {
-
-  BankAc = inject(BankAccountStore);
-
-
+  doSomething() {
+    console.log('They clicked that button!');
+  }
   current = signal('');
 
   getDecoration = computed(() => (this.current() === 'Home' ? '*' : ''));
-  onLinkClicked(path: string) {
-    this.current.set(path);
+  onLinkClicked(link: NavLink) {
+    this.current.set(link.label);
   }
+
+  accountStore = inject(BankAccountStore);
+
   links = signal<NavLink[]>([
     {
       href: '/',

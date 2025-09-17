@@ -1,11 +1,17 @@
 @Links.Api_HostAddress = http://localhost:1337
 
-POST POST http://localhost:1337/links
+POST http://localhost:1337/links
 Content-Type: application/json
 Authorization: bearer SOME_VALUE_YOU_GET_FROM_ANOTHER_SERVICE
 
 {
-    "href": "https://www.hypertheory.com",
-    "description": "Best danged training available ANYWHERE!"
+    "title": "Some Link",
+    "description": "Some Description",
+    "href": "https://blah.com"
 }
 
+
+###
+
+GET http://localhost:1337/links
+Accept: application/json 
