@@ -21,7 +21,7 @@ builder.Services.AddCors(c =>
 });
 var connectionString = builder.Configuration.GetConnectionString("links")
     ?? throw new Exception("You Need a Connection String!");
-Console.WriteLine("Using This Connection String " + connectionString);
+
 
 // Singleton in this use means create one of these the first time anyone needs it
 // and then reuse the same instance for all of eternity (until the app shuts down)
@@ -46,6 +46,11 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/openapi/v1.json", "v1");
+
+    });
 }
 
 app.UseAuthorization();

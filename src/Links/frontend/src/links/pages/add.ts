@@ -1,15 +1,16 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
-    FormControl,
-    FormGroup,
-    ReactiveFormsModule,
-    Validators,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
 } from '@angular/forms';
+import { LinkCreateModel, LinksStore } from '../services/links-store';
 @Component({
-    selector: 'app-links-add',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [ReactiveFormsModule],
-    template: `
+  selector: 'app-links-add',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ReactiveFormsModule],
+  template: `
     <form [formGroup]="form" (ngSubmit)="addLink()">
       <fieldset class="fieldset">
         <legend class="fieldset-legend">The Title of the Link</legend>
@@ -42,44 +43,66 @@ import {
           placeholder=""
         ></textarea>
         <p class="label">required</p>
+        @let descriptionInput = form.controls.description;
+        @if (
+          descriptionInput.errors &&
+          (descriptionInput.touched || descriptionInput.dirty)
+        ) {
+          <div class="alert alert-error">
+            <p>This field has some errors!</p>
+            @if (descriptionInput.hasError('required')) {
+              <p>This is required</p>
+            }
+            @if (descriptionInput.hasError('maxlength')) {
+              <p>This is too darned long.</p>
+            }
+          </div>
+        }
       </fieldset>
       <fieldset class="fieldset">
         <legend class="fieldset-legend">The Link</legend>
         <input formControlName="href" type="url" class="input" placeholder="" />
         <p class="label">required</p>
+        @let urlInput = form.controls.href;
+        @if (urlInput.errors && (urlInput.touched || urlInput.dirty)) {
+          <div class="alert alert-error">
+            <p>This field has some errors!</p>
+            @if (urlInput.hasError('required')) {
+              <p>This is required</p>
+            }
+            @if (urlInput.hasError('maxlength')) {
+              <p>This is too darned long.</p>
+            }
+          </div>
+        }
       </fieldset>
       <button class="btn btn-primary" type="submit">Add This Link</button>
     </form>
   `,
-    styles: ``,
+  styles: ``,
 })
 export class Add {
-    form = new FormGroup({
-        title: new FormControl('', {
-            nonNullable: true,
-            validators: [Validators.required, Validators.maxLength(100)],
-        }),
-        description: new FormControl('', {
-            nonNullable: true,
-            validators: [Validators.required],
-        }),
-        href: new FormControl('', {
-            nonNullable: true,
-            validators: [Validators.required],
-        }),
-    });
-
-    async addLink() {
-        if (this.form.valid) {
-            await fetch('http://localhost:1337/links', {
-                method: 'POST',
-                body: JSON.stringify(this.form.value),
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-        } else {
-            console.warn('The form is not valid - whatcha going to do?');
-        }
+  form = new FormGroup({
+    title: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.maxLength(100)],
+    }),
+    description: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+    href: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+  });
+  store = inject(LinksStore);
+  async addLink() {
+    if (this.form.valid) {
+      await this.store.addLink(this.form.value as LinkCreateModel);
+      this.form.reset();
+    } else {
+      this.form.markAllAsTouched();
     }
+  }
 }

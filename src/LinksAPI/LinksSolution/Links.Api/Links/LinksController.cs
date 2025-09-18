@@ -1,6 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿
+
+using System.ComponentModel.DataAnnotations;
 using Marten;
 using Microsoft.AspNetCore.Mvc;
+using Weasel.Postgresql.Tables;
 
 namespace Links.Api.Links;
 
@@ -10,16 +13,25 @@ namespace Links.Api.Links;
 [ApiController]
 public class LinksController(IDocumentSession session, IManagerUserIdentity userIdentityManager) : ControllerBase
 {
-
+    // GET /links
+    // GET /link?sortOrder=NewestFirst
     [HttpGet("/links")]
-    public async Task<ActionResult> GetAllLinksAsync()
+    public async Task<ActionResult<IReadOnlyList<CreateLinkResponse>>> GetAllLinksAsync([FromQuery] string sortOrder = "OldestFirst")
     {
-        var response = await session.Query<CreateLinkResponse>().ToListAsync();
-        return Ok(response);
+        var response = session.Query<CreateLinkResponse>();
+
+        if (sortOrder == "NewestFirst")
+        {
+            response = (Marten.Linq.IMartenQueryable<CreateLinkResponse>)response.OrderByDescending(link => link.Created);
+        }
+
+        var results = await response.ToListAsync();
+        //await Task.Delay(3000);
+        return Ok(results);
     }
 
     [HttpPost("/links")]
-    public async Task<ActionResult> AddALink(
+    public async Task<ActionResult<CreateLinkResponse>> AddALink(
         [FromBody] CreateLinkRequest request
         )
     {
@@ -36,12 +48,13 @@ public class LinksController(IDocumentSession session, IManagerUserIdentity user
         };
         session.Store(response);
         await session.SaveChangesAsync();
+
         return Created($"/links/{response.Id}", response);
     }
 
     // If we get a GET request to /links/{guid} THEN create this controller and run this method, if isn't, don't bother me, just return 404
     [HttpGet("/links/{postId:guid}")]
-    public async Task<ActionResult> GetLinkById(Guid postId)
+    public async Task<ActionResult<CreateLinkResponse>> GetLinkById(Guid postId)
     {
         var savedLink = await session.Query<CreateLinkResponse>().
              SingleOrDefaultAsync(x => x.Id == postId);
