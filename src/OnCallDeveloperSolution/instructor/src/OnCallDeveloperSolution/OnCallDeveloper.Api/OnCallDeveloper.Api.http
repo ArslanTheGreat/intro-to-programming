@@ -1,0 +1,7 @@
+@OnCallDeveloper.Api_HostAddress = http://localhost:8080
+
+
+GET http://localhost:1337/oncalldeveloper
+Accept: application/json
+
+###
